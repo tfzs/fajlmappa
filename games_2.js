@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fájl-Kaland – games_2.js  (verzió: 0.6 beta)
+   Fájl-Kaland – games_2.js  (verzió: 0.6.1 beta)
    A további három, történetvezérelt és szimulátoros játékmodul:
      4. Káosz Kapitány Szobája          (Rendrakós szimulátor és Fájlnév-szépségverseny)
      5. Lomtár-mentőakció és Vírusvadász (Visszaállítás, gyanús .exe fájlok, Lomtár ürítése)

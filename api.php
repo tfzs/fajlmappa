@@ -1,6 +1,6 @@
 <?php
 /**
- * Fájl-Kaland – Backend API  (verzió: 0.6 beta)
+ * Fájl-Kaland – Backend API  (verzió: 0.6.1 beta)
  * PHP 8+ és SQLite3 (PDO). Zero-config: első futáskor létrehozza az adatbázist és a táblákat.
  * Minden kérés és válasz JSON. A művelet neve az "action" paraméterben érkezik
  * (GET query stringben vagy a JSON törzsben).
@@ -27,7 +27,7 @@ session_set_cookie_params([
 ]);
 session_start();
 
-const APP_VERSION = '0.6 beta';
+const APP_VERSION = '0.6.1 beta';
 
 const DB_FILE = __DIR__ . '/adatbazis.sqlite';
 

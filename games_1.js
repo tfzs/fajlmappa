@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fájl-Kaland – games_1.js  (verzió: 0.6 beta)
+   Fájl-Kaland – games_1.js  (verzió: 0.6.1 beta)
    Az első három játékmodul:
      1. Kiterjesztés-párosító   (Micsoda ez a fájl?)
      2. Útvonal-labirintus      (Navigáció és fastruktúra – explorer.js-sel)
@@ -171,6 +171,7 @@
 .fkg1-card.is-dragging {
     position: fixed; margin: 0; transform: translate(-50%, -50%) rotate(-4deg) scale(1.08); z-index: 9999;
     pointer-events: none; cursor: grabbing; box-shadow: 0 16px 32px rgba(0, 0, 0, .35);
+    font-family: 'Nunito', system-ui, sans-serif; color: #1e293b; user-select: none; -webkit-user-select: none;
 }
 .fkg1-card.is-wrong { animation: fkg-shake .45s ease-in-out; outline: 4px solid #ef4444; }
 .fkg1-card.is-falling { transition: transform .5s ease-in, opacity .5s; transform: translateY(120px) rotate(30deg); opacity: 0; }
@@ -645,7 +646,13 @@
             const card = this.cards.find(c => c.id === el.dataset.id && !c.done);
             if (!card) return;
             ev.preventDefault();
-            this.drag = { card, startX: ev.clientX, startY: ev.clientY, pointerId: ev.pointerId, active: false, hoverEl: null };
+            // Hol fogtuk meg a kártyát a középpontjához képest – így húzás közben pontosan az ujj/egér alatt marad
+            const rect = el.getBoundingClientRect();
+            this.drag = {
+                card, startX: ev.clientX, startY: ev.clientY, pointerId: ev.pointerId, active: false, hoverEl: null,
+                grabX: ev.clientX - (rect.left + rect.width / 2),
+                grabY: ev.clientY - (rect.top + rect.height / 2)
+            };
             window.addEventListener('pointermove', this.onWindowMove);
             window.addEventListener('pointerup', this.onWindowUp);
             window.addEventListener('pointercancel', this.onWindowUp);
@@ -661,11 +668,14 @@
                 d.card.dragging = true;
                 // Biti szövegbuboréka ne takarja el az állomásokat húzás közben (tableten fontos)
                 if (FK.Biti && typeof FK.Biti.hideBubble === 'function') FK.Biti.hideBubble();
+                // A kártyát a <body>-ba tesszük át: az ablak transzformációja és a szalag overflow-ja
+                // így nem tolja el és nem vágja le (position: fixed a teljes képernyőhöz igazodik)
+                document.body.appendChild(d.card.el);
                 d.card.el.classList.add('is-dragging');
                 this.select(d.card.id);
             }
-            d.card.el.style.left = ev.clientX + 'px';
-            d.card.el.style.top = ev.clientY + 'px';
+            d.card.el.style.left = (ev.clientX - d.grabX) + 'px';
+            d.card.el.style.top = (ev.clientY - d.grabY) + 'px';
             // elementsFromPoint: a húzott kártya vagy más lebegő elem alatt is megtaláljuk az állomást
             const st = document.elementsFromPoint(ev.clientX, ev.clientY)
                 .map(el => el.closest('.fkg1-station'))
@@ -698,6 +708,7 @@
         returnToBelt(card) {
             card.dragging = false;
             card.el.classList.remove('is-dragging');
+            if (this.belt && card.el.parentNode !== this.belt) this.belt.appendChild(card.el);
             card.el.style.top = '';
             const maxX = this.belt.clientWidth - card.el.offsetWidth - 46;
             card.el.style.left = Math.round(Math.min(1, card.progress) * maxX) + 'px';

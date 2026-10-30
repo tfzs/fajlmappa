@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fájl-Kaland – core.js  (verzió: 0.6 beta)
+   Fájl-Kaland – core.js  (verzió: 0.6.1 beta)
    Bejelentkezés, tanári vezérlőpult, Windows 11 jellegű diák asztal,
    ablakkezelő, Adaptív Nehézségi Motor, Biti a kiber-robot, Bájt-Bolt,
    profil és kitűzők.
@@ -41,7 +41,7 @@
     // GLOBÁLIS ÁLLAPOT
     // ======================================================================
     const FK = window.FK = window.FK || {};
-    FK.VERSION = '0.6 beta';
+    FK.VERSION = '0.6.1 beta';
     FK.state = { user: null, progress: [] };
     FK.apps = FK.apps || {};
     FK.games = FK.games || {};
