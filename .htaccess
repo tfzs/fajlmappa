@@ -1,0 +1,16 @@
+# Fájl-Kaland – Apache beállítások
+# Az SQLite adatbázis (benne a diákok nevei és jelszó-hashei) ne legyen letölthető a böngészőből!
+
+DirectoryIndex index.html
+
+Options -Indexes
+
+<FilesMatch "\.(sqlite|sqlite3|db)(-wal|-shm|-journal)?$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

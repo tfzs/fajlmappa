@@ -1,0 +1,5 @@
+# A futás közben létrejövő adatbázis (diákadatok) ne kerüljön a repóba
+adatbazis.sqlite
+adatbazis.sqlite-wal
+adatbazis.sqlite-shm
+adatbazis.sqlite-journal

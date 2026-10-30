@@ -1,0 +1,2372 @@
+/* ==========================================================================
+   Fájl-Kaland – egyedi stílusok (a Tailwind CSS kiegészítése)
+   ========================================================================== */
+
+:root {
+    --fk-blue: #2563eb;
+    --fk-blue-dark: #1d4ed8;
+    --fk-green: #16a34a;
+    --fk-green-dark: #15803d;
+    --fk-red: #e11d48;
+    --fk-red-dark: #be123c;
+    --fk-yellow: #facc15;
+    --fk-orange: #fb923c;
+    --fk-purple: #8b5cf6;
+    --fk-ink: #1e293b;
+    --fk-taskbar-h: 60px;
+    --fk-radius: 1.25rem;
+    --fk-glass: rgba(243, 246, 252, 0.82);
+    --fk-glass-border: rgba(255, 255, 255, 0.65);
+    --fk-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+    --fk-folder-color: #fbbf24;
+    --fk-folder-color-dark: #f59e0b;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--fk-ink);
+    background: #0f172a;
+    overscroll-behavior: none;
+}
+
+button,
+[role="button"] {
+    touch-action: manipulation;
+}
+
+:focus-visible {
+    outline: 3px solid #fde047;
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Animációk
+   ========================================================================== */
+
+@keyframes fk-float {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50%      { transform: translateY(-22px) rotate(6deg); }
+}
+
+@keyframes fk-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-16px); }
+}
+
+@keyframes fk-wiggle {
+    0%, 100% { transform: rotate(-4deg); }
+    50%      { transform: rotate(4deg); }
+}
+
+@keyframes fk-pop-in {
+    0%   { opacity: 0; transform: scale(0.92) translateY(12px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fk-gradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fk-toast-in {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fk-bump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fk-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fk-slide-up {
+    from { opacity: 0; transform: translate(-50%, 16px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.fk-bounce  { animation: fk-bounce 1.2s ease-in-out infinite; }
+.fk-wiggle  { animation: fk-wiggle 2.4s ease-in-out infinite; }
+.fk-pop-in  { animation: fk-pop-in 0.35s cubic-bezier(.2, .9, .3, 1.2) both; }
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ==========================================================================
+   Bejelentkező képernyő
+   ========================================================================== */
+
+.fk-auth-bg {
+    background: linear-gradient(135deg, #38bdf8, #6366f1, #a855f7, #f472b6, #38bdf8);
+    background-size: 400% 400%;
+    animation: fk-gradient 18s ease infinite;
+}
+
+.fk-title-shadow {
+    text-shadow: 0 4px 0 rgba(30, 64, 175, 0.55), 0 8px 24px rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.01em;
+}
+
+.fk-floaters {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.fk-floaters span {
+    position: absolute;
+    font-size: clamp(2rem, 6vw, 3.75rem);
+    opacity: 0.55;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15));
+    animation: fk-float 6s ease-in-out infinite;
+}
+
+.fk-auth-tab {
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.9rem;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #475569;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+    min-height: 48px;
+}
+
+.fk-auth-tab:hover {
+    color: var(--fk-blue);
+}
+
+.fk-auth-tab.is-active {
+    background: #fff;
+    color: var(--fk-blue);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+}
+
+.fk-auth-tab:active {
+    transform: scale(0.97);
+}
+
+.fk-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.fk-hint {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.fk-input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 1rem;
+    border: 3px solid #e2e8f0;
+    border-radius: 1rem;
+    background: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--fk-ink);
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+select.fk-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23475569'%3E%3Cpath d='M5.3 7.3a1 1 0 0 1 1.4 0L10 10.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 1.25rem;
+    padding-right: 2.75rem;
+}
+
+.fk-input::placeholder {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.fk-input:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.25);
+}
+
+.fk-eye {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fk-eye:hover {
+    background: #e2e8f0;
+}
+
+.fk-msg-error   { background: #ffe4e6; color: #9f1239; border: 2px solid #fda4af; }
+.fk-msg-success { background: #dcfce7; color: #166534; border: 2px solid #86efac; }
+.fk-msg-warn    { background: #fef9c3; color: #854d0e; border: 2px solid #fde047; }
+.fk-msg-info    { background: #dbeafe; color: #1e40af; border: 2px solid #93c5fd; }
+
+/* ==========================================================================
+   Gombok
+   ========================================================================== */
+
+.fk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.65rem 1.15rem;
+    border-radius: 0.95rem;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s, box-shadow 0.15s, background 0.15s, opacity 0.15s;
+}
+
+.fk-btn:active:not(:disabled) {
+    transform: translateY(2px);
+}
+
+.fk-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fk-btn-sm {
+    min-height: 36px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    border-radius: 0.75rem;
+}
+
+.fk-btn-primary {
+    background: var(--fk-blue);
+    color: #fff;
+    box-shadow: 0 4px 0 var(--fk-blue-dark);
+}
+.fk-btn-primary:hover:not(:disabled) { background: #3b82f6; }
+
+.fk-btn-success {
+    background: var(--fk-green);
+    color: #fff;
+    box-shadow: 0 4px 0 var(--fk-green-dark);
+}
+.fk-btn-success:hover:not(:disabled) { background: #22c55e; }
+
+.fk-btn-danger {
+    background: var(--fk-red);
+    color: #fff;
+    box-shadow: 0 4px 0 var(--fk-red-dark);
+}
+.fk-btn-danger:hover:not(:disabled) { background: #f43f5e; }
+
+.fk-btn-outline-danger {
+    background: #fff;
+    color: var(--fk-red);
+    border: 2px solid #fda4af;
+}
+.fk-btn-outline-danger:hover:not(:disabled) { background: #fff1f2; }
+
+.fk-btn-ghost {
+    background: #f1f5f9;
+    color: #334155;
+    border: 2px solid #e2e8f0;
+}
+.fk-btn-ghost:hover:not(:disabled) { background: #e2e8f0; }
+
+.fk-btn-ghost-light {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+}
+.fk-btn-ghost-light:hover:not(:disabled) { background: rgba(255, 255, 255, 0.25); }
+
+.fk-btn:active:not(:disabled).fk-btn-primary,
+.fk-btn:active:not(:disabled).fk-btn-success,
+.fk-btn:active:not(:disabled).fk-btn-danger {
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.fk-btn.is-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.fk-btn.is-loading::after {
+    content: '';
+    position: absolute;
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: fk-spin 0.7s linear infinite;
+}
+
+/* ==========================================================================
+   Tanári vezérlőpult
+   ========================================================================== */
+
+.fk-teacher-tab {
+    position: relative;
+    padding: 0.75rem 1rem;
+    border-radius: 0.9rem 0.9rem 0 0;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    min-height: 48px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.fk-teacher-tab:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.fk-teacher-tab.is-active {
+    background: #f1f5f9;
+    color: var(--fk-blue-dark);
+}
+
+.fk-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 0.4rem;
+    margin-left: 0.25rem;
+    border-radius: 999px;
+    background: #f59e0b;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.fk-no-scrollbar {
+    scrollbar-width: none;
+}
+.fk-no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.fk-card {
+    background: #fff;
+    border-radius: var(--fk-radius);
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+@media (min-width: 640px) {
+    .fk-card { padding: 1.5rem; }
+}
+
+.fk-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #fff;
+    border-radius: var(--fk-radius);
+    padding: 1rem 1.15rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.fk-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 1rem;
+    background: #eff6ff;
+    font-size: 1.6rem;
+}
+
+.fk-stat-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.fk-stat-value {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--fk-ink);
+}
+
+.fk-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+.fk-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f8fafc;
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.fk-table tbody td {
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    background: #fff;
+}
+
+.fk-table tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.fk-table tfoot td {
+    padding: 0.75rem 0.85rem;
+    background: #f1f5f9;
+    border-top: 2px solid #e2e8f0;
+}
+
+.fk-table .text-right  { text-align: right; }
+.fk-table .text-center { text-align: center; }
+
+.fk-matrix thead th {
+    text-transform: none;
+    font-size: 0.85rem;
+    line-height: 1.15;
+}
+
+.fk-sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    box-shadow: 2px 0 0 #e2e8f0;
+}
+
+.fk-table thead th.fk-sticky-col {
+    z-index: 3;
+}
+
+.fk-table tbody td.fk-sticky-col {
+    background: #fff;
+}
+
+.fk-table tfoot td.fk-sticky-col {
+    background: #f1f5f9;
+}
+
+.fk-check {
+    width: 1.35rem;
+    height: 1.35rem;
+    accent-color: var(--fk-blue);
+    cursor: pointer;
+}
+
+.fk-chip {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 800;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Nehézségi szint jelölők (0 = nem kezdte el, 1–5 = szint) */
+.fk-lvl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.65rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+.fk-lvl-0 { background: #e2e8f0; color: #94a3b8; }
+.fk-lvl-1 { background: #93c5fd; color: #1e3a8a; }
+.fk-lvl-2 { background: #60a5fa; }
+.fk-lvl-3 { background: #3b82f6; }
+.fk-lvl-4 { background: #6366f1; }
+.fk-lvl-5 { background: linear-gradient(135deg, #f59e0b, #ec4899); box-shadow: 0 0 0 2px #fde68a; }
+
+.fk-class-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1.1rem;
+    border: 2px solid #e2e8f0;
+    background: linear-gradient(180deg, #fff, #f8fafc);
+    text-align: left;
+    transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.fk-class-card:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+}
+
+.fk-class-card:active {
+    transform: scale(0.98);
+}
+
+.fk-class-name {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--fk-blue-dark);
+    line-height: 1.1;
+}
+
+/* ==========================================================================
+   Értesítések (toast)
+   ========================================================================== */
+
+.fk-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--fk-shadow);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-left: 6px solid #3b82f6;
+    animation: fk-toast-in 0.25s ease-out both;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.fk-toast.is-leaving {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.fk-toast-success { border-left-color: #22c55e; }
+.fk-toast-error   { border-left-color: #f43f5e; }
+.fk-toast-warn    { border-left-color: #f59e0b; }
+.fk-toast-coin    { border-left-color: #eab308; }
+.fk-toast-xp      { border-left-color: #a855f7; }
+
+/* ==========================================================================
+   Diák felület – Windows 11 jellegű asztal
+   ========================================================================== */
+
+.fk-desktop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--fk-taskbar-h);
+    overflow: hidden;
+}
+
+/* Asztali hátterek (a Bájt-Boltban megvásárolhatók). Az fk-bg-<azonosító> osztály
+   az asztalra és a bolti előnézetre is kerülhet. */
+.fk-bg-default {
+    background:
+        radial-gradient(ellipse at 30% 110%, rgba(59, 130, 246, 0.9), transparent 60%),
+        radial-gradient(ellipse at 70% 60%, rgba(14, 165, 233, 0.75), transparent 55%),
+        radial-gradient(ellipse at 50% 20%, rgba(99, 102, 241, 0.55), transparent 60%),
+        linear-gradient(160deg, #0c4a6e, #1e3a8a 55%, #312e81);
+}
+
+/* Űrállomás: csillagok, bolygó, keringő állomás gyűrűvel */
+.fk-bg-bg_station {
+    background:
+        radial-gradient(circle at 72% 30%, #e2e8f0 0 1.6%, transparent 1.8%),
+        radial-gradient(circle at 72% 30%, transparent 0 7%, rgba(203, 213, 225, 0.95) 7.3% 8.1%, transparent 8.4%),
+        linear-gradient(90deg, transparent 63.5%, rgba(148, 163, 184, 0.9) 63.5% 80.5%, transparent 80.5%) 0 29.6% / 100% 0.9% no-repeat,
+        radial-gradient(circle at 22% 88%, #f97316 0 14%, #9a3412 22%, transparent 22.3%),
+        radial-gradient(ellipse at 22% 88%, transparent 0 24%, rgba(253, 186, 116, 0.45) 24.5% 25.5%, transparent 26%),
+        radial-gradient(1.5px 1.5px at 8% 14%, #fff, transparent),
+        radial-gradient(1px 1px at 18% 40%, #fff, transparent),
+        radial-gradient(2px 2px at 35% 22%, #fde68a, transparent),
+        radial-gradient(1px 1px at 48% 60%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 58% 12%, #fff, transparent),
+        radial-gradient(1px 1px at 86% 58%, #fff, transparent),
+        radial-gradient(2px 2px at 92% 12%, #bae6fd, transparent),
+        radial-gradient(1px 1px at 66% 82%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 40% 90%, #fff, transparent),
+        radial-gradient(ellipse at 60% 40%, rgba(56, 189, 248, 0.18), transparent 60%),
+        linear-gradient(170deg, #020617, #0f172a 50%, #1e1b4b);
+}
+
+/* Cyberpunk: neon nap, magenta égbolt, perspektivikus rács */
+.fk-bg-bg_cyber {
+    background:
+        repeating-linear-gradient(90deg, rgba(34, 211, 238, 0.55) 0 2px, transparent 2px 64px) 0 100% / 100% 38% no-repeat,
+        repeating-linear-gradient(180deg, rgba(236, 72, 153, 0.7) 0 2px, transparent 2px 28px) 0 100% / 100% 38% no-repeat,
+        linear-gradient(180deg, #1e1b4b, #0f0a1f) 0 100% / 100% 38% no-repeat,
+        repeating-linear-gradient(180deg, transparent 0 10px, rgba(15, 10, 31, 0.9) 10px 14px) 50% 61% / 30% 12% no-repeat,
+        radial-gradient(circle at 50% 62%, #fde047 0 12%, #f97316 16%, #db2777 21%, transparent 21.5%),
+        linear-gradient(180deg, #0f0a1f 0%, #4c1d95 35%, #be185d 62%, #0f0a1f 62.2%);
+}
+
+/* Cicás: pasztell alapon cicafejek és mancsnyomok */
+.fk-bg-bg_cats {
+    background-color: #fce7f3;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23f9a8d4'%3E%3Cpath d='M22 30 L28 12 L38 26 Z'/%3E%3Cpath d='M58 30 L52 12 L42 26 Z'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3Cg fill='%23831843'%3E%3Ccircle cx='33' cy='38' r='2.6'/%3E%3Ccircle cx='47' cy='38' r='2.6'/%3E%3Cpath d='M37 45 h6 l-3 3 z'/%3E%3C/g%3E%3Cg fill='%23c4b5fd'%3E%3Cellipse cx='115' cy='120' rx='10' ry='8'/%3E%3Ccircle cx='103' cy='106' r='4'/%3E%3Ccircle cx='111' cy='101' r='4'/%3E%3Ccircle cx='120' cy='101' r='4'/%3E%3Ccircle cx='128' cy='106' r='4'/%3E%3C/g%3E%3Cg fill='%23fbcfe8'%3E%3Cellipse cx='125' cy='40' rx='6' ry='5'/%3E%3Ccircle cx='118' cy='32' r='2.5'/%3E%3Ccircle cx='123' cy='29' r='2.5'/%3E%3Ccircle cx='128' cy='29' r='2.5'/%3E%3Ccircle cx='133' cy='32' r='2.5'/%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(160deg, #fdf2f8, #ede9fe);
+    background-size: 160px 160px, cover;
+}
+
+/* Dzsungel: sűrű levelek sötét és világos zöldben */
+.fk-bg-bg_jungle {
+    background-color: #14532d;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg%3E%3Cpath d='M20 90 C20 40 70 20 90 20 C90 60 60 90 20 90 Z' fill='%2322c55e'/%3E%3Cpath d='M20 90 L88 22' stroke='%23166534' stroke-width='3'/%3E%3Cpath d='M100 170 C100 120 150 100 170 100 C170 140 140 170 100 170 Z' fill='%2316a34a'/%3E%3Cpath d='M100 170 L168 102' stroke='%2314532d' stroke-width='3'/%3E%3Cpath d='M120 70 C150 60 175 75 178 90 C150 100 128 92 120 70 Z' fill='%234ade80'/%3E%3Cpath d='M10 160 C25 135 55 130 70 140 C55 165 30 170 10 160 Z' fill='%2315803d'/%3E%3Ccircle cx='150' cy='30' r='6' fill='%23facc15'/%3E%3Ccircle cx='60' cy='120' r='4' fill='%23f97316'/%3E%3C/g%3E%3C/svg%3E"),
+        radial-gradient(ellipse at 50% 0%, rgba(187, 247, 208, 0.45), transparent 60%),
+        linear-gradient(180deg, #166534, #052e16);
+    background-size: 180px 180px, cover, cover;
+}
+
+/* Focipálya: csíkos gyep, felezővonal, kezdőkör */
+.fk-bg-bg_football {
+    background:
+        radial-gradient(circle at 50% 50%, #fff 0 0.7%, transparent 0.9%),
+        radial-gradient(circle at 50% 50%, transparent 0 17%, rgba(255, 255, 255, 0.9) 17.2% 17.9%, transparent 18.1%),
+        linear-gradient(90deg, transparent calc(50% - 2px), rgba(255, 255, 255, 0.9) calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px)),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0 4px, transparent 4px calc(100% - 4px), rgba(255, 255, 255, 0.9) calc(100% - 4px)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0 4px, transparent 4px calc(100% - 4px), rgba(255, 255, 255, 0.9) calc(100% - 4px)),
+        repeating-linear-gradient(90deg, #22c55e 0 8.33%, #16a34a 8.33% 16.66%);
+}
+
+/* Mappa-ikon színtémák (a body kapja az fk-folder-<azonosító> osztályt) */
+.fk-folder-default      { --fk-folder-color: #fbbf24; --fk-folder-color-dark: #f59e0b; }
+.fk-folder-folder_gold  { --fk-folder-color: #facc15; --fk-folder-color-dark: #a16207; }
+.fk-folder-folder_neon  { --fk-folder-color: #22d3ee; --fk-folder-color-dark: #0e7490; }
+.fk-folder-folder_pixel { --fk-folder-color: #f97316; --fk-folder-color-dark: #7c2d12; }
+
+/* Asztali ikonok */
+.fk-desktop-icons {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(auto-fill, 104px);
+    grid-auto-columns: 96px;
+    gap: 0.35rem;
+    z-index: 5;
+}
+
+.fk-desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    width: 96px;
+    height: 104px;
+    padding: 0.5rem 0.25rem;
+    border-radius: 0.6rem;
+    border: 1px solid transparent;
+    color: #fff;
+    cursor: default;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.fk-desktop-icon:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.fk-desktop-icon.is-selected {
+    background: rgba(255, 255, 255, 0.26);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.fk-desktop-icon-img {
+    font-size: 2.75rem;
+    line-height: 1;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+
+.fk-desktop-icon-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.6);
+    word-break: break-word;
+}
+
+.fk-welcome {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    width: min(88vw, 30rem);
+    padding: 1.75rem 1.5rem;
+    border-radius: 1.75rem;
+    background: var(--fk-glass);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid var(--fk-glass-border);
+    box-shadow: var(--fk-shadow);
+    text-align: center;
+    z-index: 4;
+}
+
+.fk-window-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.fk-window-layer > * {
+    pointer-events: auto;
+}
+
+/* Helyőrző gyökérelemek a modulokhoz: amíg üresek, nem foglalnak helyet */
+.fk-module-root:empty {
+    display: none;
+}
+
+.fk-context-menu {
+    position: absolute;
+    z-index: 60;
+    min-width: 12rem;
+    padding: 0.35rem;
+    border-radius: 0.9rem;
+    background: rgba(249, 250, 251, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: var(--fk-shadow);
+}
+
+/* Start menü */
+.fk-start-menu {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--fk-taskbar-h) + 0.6rem);
+    transform: translateX(-50%);
+    width: min(94vw, 34rem);
+    z-index: 80;
+    border-radius: 1.4rem;
+    background: var(--fk-glass);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid var(--fk-glass-border);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
+    animation: fk-slide-up 0.22s ease-out both;
+}
+
+.fk-start-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.85rem 0.25rem;
+    border-radius: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    min-height: 88px;
+    transition: background 0.12s;
+}
+
+.fk-start-app span {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.fk-start-app:hover {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.fk-start-app:active {
+    transform: scale(0.97);
+}
+
+/* Avatár */
+.fk-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa, #a855f7);
+    color: #fff;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+}
+
+.fk-avatar-sm {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.9rem;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.fk-avatar-xs {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.8rem;
+    box-shadow: none;
+}
+
+/* Tálca */
+.fk-taskbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--fk-taskbar-h);
+    padding: 0 0.5rem;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 70;
+    background: rgba(238, 242, 248, 0.86);
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 -2px 12px rgba(15, 23, 42, 0.12);
+}
+
+.fk-taskbar-left,
+.fk-taskbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.fk-taskbar-right {
+    justify-content: flex-end;
+}
+
+.fk-taskbar-center {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+}
+
+.fk-taskbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.75rem;
+}
+
+.fk-taskbar-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 0.7rem;
+    font-size: 1.55rem;
+    line-height: 1;
+    transition: background 0.12s, transform 0.08s;
+}
+
+.fk-taskbar-btn:hover {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.fk-taskbar-btn:active {
+    transform: scale(0.92);
+}
+
+.fk-taskbar-btn.is-open::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 6px;
+    height: 3px;
+    border-radius: 2px;
+    background: #64748b;
+    transform: translateX(-50%);
+}
+
+.fk-taskbar-btn.is-active::after {
+    width: 16px;
+    background: var(--fk-blue);
+}
+
+.fk-logout-btn {
+    font-size: 1.3rem;
+    color: var(--fk-red);
+    font-weight: 800;
+}
+
+.fk-logout-btn:hover {
+    background: #ffe4e6;
+}
+
+/* Windows-szerű logó a Start gombon */
+.fk-win-logo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    width: 22px;
+    height: 22px;
+}
+
+.fk-win-logo i {
+    display: block;
+    border-radius: 2px;
+    background: linear-gradient(135deg, #38bdf8, #2563eb);
+}
+
+/* Pirulák: XP és Bájt-érme */
+.fk-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: 40px;
+    padding: 0 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.fk-pill.is-bump {
+    animation: fk-bump 0.5s ease-out;
+}
+
+.fk-pill-coin {
+    background: linear-gradient(180deg, #fef9c3, #fde68a);
+    border-color: #facc15;
+    color: #713f12;
+}
+
+.fk-coin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fef08a, #eab308 70%, #a16207);
+    color: #713f12;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    box-shadow: inset 0 -2px 0 rgba(113, 63, 18, 0.35);
+}
+
+.fk-xpbar {
+    position: relative;
+    display: inline-block;
+    width: 64px;
+    height: 8px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.fk-xpbar span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #a855f7, #6366f1);
+    transition: width 0.6s ease;
+}
+
+.fk-clock {
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #334155;
+}
+
+/* ==========================================================================
+   Reszponzív igazítások (tablet / kis képernyő / érintés)
+   ========================================================================== */
+
+@media (max-width: 767px) {
+    :root {
+        --fk-taskbar-h: 64px;
+    }
+
+    .fk-xpbar {
+        width: 40px;
+    }
+
+    .fk-pill {
+        height: 36px;
+        padding: 0 0.55rem;
+        font-size: 0.85rem;
+    }
+
+    .fk-taskbar-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .fk-taskbar {
+        gap: 0.25rem;
+        padding: 0 0.25rem;
+    }
+
+    .fk-taskbar-left {
+        flex: 0 0 auto;
+    }
+
+    .fk-taskbar-center .fk-taskbar-btn[data-app] {
+        display: none;
+    }
+
+    .fk-xpbar,
+    #fk-xp {
+        display: none;
+    }
+
+    .fk-desktop-icons {
+        grid-template-rows: repeat(auto-fill, 96px);
+        grid-auto-columns: 84px;
+    }
+
+    .fk-desktop-icon {
+        width: 84px;
+        height: 96px;
+    }
+
+    .fk-desktop-icon-img {
+        font-size: 2.4rem;
+    }
+
+    .fk-welcome {
+        top: auto;
+        bottom: 1rem;
+        transform: translateX(-50%);
+        padding: 1.1rem;
+    }
+}
+
+/* Érintőképernyőn nagyobb célterületek, hover-effektek nélkül */
+@media (hover: none) and (pointer: coarse) {
+    .fk-desktop-icon:hover {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .fk-desktop-icon.is-selected {
+        background: rgba(255, 255, 255, 0.26);
+        border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .fk-check {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
+    .fk-btn-sm {
+        min-height: 42px;
+        padding: 0.5rem 0.9rem;
+    }
+}
+
+/* Görgetősáv finomítás */
+.fk-card ::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.fk-card ::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+
+.fk-card ::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Tartalék: ha a Tailwind CDN lassan töltődik be, a rejtett képernyők akkor se látszódjanak */
+.hidden {
+    display: none !important;
+}
+
+/* ==========================================================================
+   2. LÉPÉS – core.js felületei
+   ========================================================================== */
+
+/* --- Asztali játék-ikonok: mappa a felszerelt stílusban + emoji jelvény --- */
+.fk-desktop-folder {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 54px;
+    font-size: 1rem;
+}
+
+.fk-desktop-folder .fk-folder-svg {
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+
+.fk-desktop-badge {
+    position: absolute;
+    right: -4px;
+    bottom: -2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.05rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.fk-desktop-lvl {
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 22px;
+    text-align: center;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.fk-folder-neon {
+    overflow: visible;
+}
+
+@keyframes fk-sparkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.6); }
+    50%      { opacity: 1; transform: scale(1); }
+}
+
+.fk-sparkle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: fk-sparkle 1.8s ease-in-out infinite;
+}
+
+.fk-sparkle-2 {
+    animation-delay: 0.9s;
+}
+
+/* --- Start menü programrács --- */
+.fk-start-apps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+    padding: 0.75rem 1rem 1rem;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+@media (max-width: 520px) {
+    .fk-start-apps {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.fk-start-app {
+    text-align: center;
+    line-height: 1.15;
+}
+
+/* --- Tálca kiegészítések --- */
+.fk-taskbar-user {
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.fk-taskbar-user:hover {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+button.fk-pill {
+    cursor: pointer;
+    transition: transform 0.08s, filter 0.12s;
+}
+
+button.fk-pill:hover {
+    filter: brightness(1.05);
+}
+
+button.fk-pill:active {
+    transform: scale(0.96);
+}
+
+.fk-taskbar-winbtn {
+    font-size: 1.35rem;
+}
+
+.fk-taskbar-winbtn.is-open::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 6px;
+    height: 3px;
+    border-radius: 2px;
+    background: #64748b;
+    transform: translateX(-50%);
+    transition: width 0.15s, background 0.15s;
+}
+
+.fk-taskbar-winbtn.is-active {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.fk-taskbar-winbtn.is-active::after {
+    width: 16px;
+    background: var(--fk-blue);
+}
+
+/* --- Ablakok --- */
+@keyframes fk-window-in {
+    from { opacity: 0; transform: scale(0.94) translateY(14px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes fk-window-out {
+    to { opacity: 0; transform: scale(0.94) translateY(14px); }
+}
+
+.fk-window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    min-height: 220px;
+    border-radius: 0.9rem;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15, 23, 42, 0.15);
+    overflow: hidden;
+    animation: fk-window-in 0.18s ease-out both;
+    user-select: text;
+}
+
+.fk-window.is-active {
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45), 0 2px 8px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+.fk-window.is-minimized {
+    display: none;
+}
+
+.fk-window.is-closing {
+    animation: fk-window-out 0.15s ease-in both;
+    pointer-events: none;
+}
+
+.fk-window.is-dragging {
+    opacity: 0.94;
+    transition: none;
+}
+
+.fk-window.is-maximized {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0;
+}
+
+.fk-window-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    flex-shrink: 0;
+    padding-left: 0.85rem;
+    background: rgba(241, 245, 249, 0.96);
+    border-bottom: 1px solid #e2e8f0;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.fk-window.is-dragging .fk-window-titlebar {
+    cursor: grabbing;
+}
+
+.fk-window.is-maximized .fk-window-titlebar {
+    cursor: default;
+}
+
+.fk-window-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.fk-window-title {
+    flex: 1;
+    min-width: 0;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fk-window-controls {
+    display: flex;
+    align-self: stretch;
+}
+
+.fk-wbtn {
+    width: 48px;
+    height: 100%;
+    font-size: 1rem;
+    color: #334155;
+    transition: background 0.12s, color 0.12s;
+}
+
+.fk-wbtn:hover {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.fk-wbtn-close:hover {
+    background: #e11d48;
+    color: #fff;
+}
+
+.fk-window-body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    background: #fff;
+}
+
+.fk-window-resize {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+    cursor: nwse-resize;
+    touch-action: none;
+    background: linear-gradient(135deg, transparent 50%, rgba(100, 116, 139, 0.45) 50% 58%, transparent 58% 70%, rgba(100, 116, 139, 0.45) 70% 78%, transparent 78%);
+}
+
+.fk-window.is-maximized .fk-window-resize {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .fk-wbtn {
+        width: 54px;
+        font-size: 1.15rem;
+    }
+
+    .fk-window-titlebar {
+        height: 50px;
+    }
+}
+
+/* --- Közös panel-elemek --- */
+.fk-panel-title {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--fk-ink);
+}
+
+.fk-panel-sub {
+    font-weight: 700;
+    color: #64748b;
+}
+
+.fk-section-title {
+    margin: 1.5rem 0 0.75rem;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #334155;
+}
+
+.fk-mini-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.fk-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 3rem 1rem;
+    font-weight: 800;
+    color: #64748b;
+    text-align: center;
+}
+
+.fk-spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid #cbd5e1;
+    border-top-color: var(--fk-blue);
+    border-radius: 50%;
+    animation: fk-spin 0.7s linear infinite;
+}
+
+.fk-stars {
+    display: inline-flex;
+    gap: 1px;
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.fk-star {
+    color: #cbd5e1;
+}
+
+.fk-star.is-on {
+    color: #f59e0b;
+    text-shadow: 0 1px 0 #b45309;
+}
+
+.fk-tabs {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.3rem;
+    border-radius: 1rem;
+    background: #f1f5f9;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.fk-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.fk-tab {
+    flex: 1 0 auto;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.8rem;
+    font-weight: 800;
+    color: #475569;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.fk-tab:hover {
+    color: var(--fk-blue);
+}
+
+.fk-tab.is-active {
+    background: #fff;
+    color: var(--fk-blue);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+.fk-coin-sm {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.7rem;
+}
+
+.fk-pill-big {
+    height: 52px;
+    padding: 0 1.1rem;
+    font-size: 1.4rem;
+}
+
+.fk-pill-big .fk-coin {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.05rem;
+}
+
+/* --- Bájt-Bolt --- */
+.fk-shop {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+    min-height: 100%;
+    background: linear-gradient(180deg, #fefce8, #fff 180px);
+}
+
+.fk-shop-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.fk-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1rem;
+}
+
+.fk-shop-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.2rem;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.fk-shop-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.fk-shop-card.is-equipped {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.fk-shop-preview {
+    position: relative;
+    height: 120px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.fk-shop-preview-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 12px;
+    background: rgba(238, 242, 248, 0.86);
+}
+
+.fk-shop-preview-folder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 40%, #fff, transparent 70%),
+        repeating-linear-gradient(45deg, #f8fafc 0 10px, #f1f5f9 10px 20px);
+}
+
+.fk-shop-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+    padding: 0.85rem;
+}
+
+.fk-shop-name {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.fk-shop-desc {
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.fk-shop-price {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 800;
+    color: #713f12;
+}
+
+.fk-shop-owned {
+    color: #15803d;
+}
+
+/* --- Kitűzők --- */
+.fk-ach-summary {
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+    color: #475569;
+}
+
+.fk-ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.85rem;
+}
+
+.fk-ach {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 1rem 0.75rem;
+    border-radius: 1.2rem;
+    background: #f1f5f9;
+    border: 2px dashed #cbd5e1;
+    text-align: center;
+    filter: grayscale(1);
+    opacity: 0.75;
+}
+
+.fk-ach.is-earned {
+    background: linear-gradient(180deg, #fffbeb, #fef3c7);
+    border: 2px solid #fbbf24;
+    filter: none;
+    opacity: 1;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2);
+}
+
+.fk-ach-medal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    font-size: 2rem;
+}
+
+.fk-ach.is-earned .fk-ach-medal {
+    background: radial-gradient(circle at 35% 30%, #fef9c3, #facc15 70%, #ca8a04);
+    box-shadow: inset 0 -3px 0 rgba(161, 98, 7, 0.35), 0 0 0 4px #fff;
+}
+
+.fk-ach-name {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #334155;
+}
+
+.fk-ach-desc {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* --- Profil --- */
+.fk-profile {
+    padding: 1.25rem;
+}
+
+.fk-profile-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 1.4rem;
+    background: linear-gradient(135deg, #e0f2fe, #ede9fe);
+    border: 1px solid #c7d2fe;
+}
+
+.fk-avatar-xl {
+    width: 5.5rem;
+    height: 5.5rem;
+    font-size: 2.2rem;
+    box-shadow: 0 0 0 5px #fff, 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.fk-profile-main {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.fk-profile-level {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+}
+
+.fk-level-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: #fff;
+    font-weight: 800;
+}
+
+.fk-profile-xpbar {
+    position: relative;
+    flex: 1 1 140px;
+    height: 14px;
+    border-radius: 999px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.15);
+}
+
+.fk-profile-xpbar span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #a855f7, #6366f1);
+    transition: width 0.6s ease;
+}
+
+.fk-profile-xptext {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #475569;
+}
+
+.fk-profile-stats {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.fk-profile-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 6.5rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    font-size: 1.4rem;
+}
+
+.fk-profile-stat strong {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+.fk-profile-stat small {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
+}
+
+button.fk-profile-stat:hover {
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.14);
+}
+
+.fk-progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0.75rem;
+}
+
+.fk-progress-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    border-radius: 1.1rem;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-left: 6px solid var(--game-color, #3b82f6);
+    text-align: left;
+    transition: transform 0.12s, box-shadow 0.12s;
+}
+
+.fk-progress-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+}
+
+.fk-progress-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 0.9rem;
+    background: #f1f5f9;
+    font-size: 1.7rem;
+}
+
+.fk-progress-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.fk-progress-name {
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.fk-progress-meta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+/* --- Játékablak bevezető --- */
+.fk-game-window .fk-window-body {
+    background: #f8fafc;
+}
+
+.fk-game-container {
+    position: relative;
+    min-height: 100%;
+}
+
+.fk-game-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    min-height: 100%;
+    padding: 2rem 1.25rem;
+    text-align: center;
+    background:
+        radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--game-color, #3b82f6) 22%, transparent), transparent 60%),
+        #f8fafc;
+}
+
+.fk-game-intro-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 2rem;
+    background: #fff;
+    font-size: 4rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15), 0 0 0 6px color-mix(in srgb, var(--game-color, #3b82f6) 35%, transparent);
+    animation: fk-bounce 2.4s ease-in-out infinite;
+}
+
+.fk-game-intro-title {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--fk-ink);
+}
+
+.fk-game-intro-desc {
+    max-width: 32rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+.fk-game-intro-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.fk-game-intro-stats > div {
+    min-width: 8.5rem;
+    padding: 0.65rem 1rem;
+    border-radius: 1rem;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    font-size: 1.15rem;
+}
+
+.fk-game-intro-rule {
+    max-width: 30rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.fk-soon {
+    max-width: 30rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 1rem;
+    background: #fef9c3;
+    border: 2px solid #fde047;
+    font-weight: 800;
+    color: #854d0e;
+}
+
+/* --- Biti, a kiber-robot --- */
+@keyframes fk-biti-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes fk-biti-talk {
+    0%, 100% { transform: translateY(0) scale(1); }
+    25%      { transform: translateY(-6px) scale(1.04) rotate(-3deg); }
+    75%      { transform: translateY(-3px) scale(1.02) rotate(3deg); }
+}
+
+@keyframes fk-biti-blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95%           { transform: scaleY(0.1); }
+}
+
+@keyframes fk-biti-light {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+
+@keyframes fk-biti-wave {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-35deg); }
+}
+
+@keyframes fk-bubble-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.9); }
+    to   { opacity: 1; transform: none; }
+}
+
+.fk-biti {
+    position: fixed;
+    right: 14px;
+    bottom: calc(var(--fk-taskbar-h) + 10px);
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+}
+
+.fk-biti.is-hidden {
+    display: none;
+}
+
+.fk-biti > * {
+    pointer-events: auto;
+}
+
+.fk-biti-bot {
+    display: block;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    animation: fk-biti-float 3.2s ease-in-out infinite;
+    filter: drop-shadow(0 10px 14px rgba(15, 23, 42, 0.35));
+    transition: transform 0.2s;
+}
+
+.fk-biti.is-talking .fk-biti-bot {
+    animation: fk-biti-talk 0.9s ease-in-out 2, fk-biti-float 3.2s ease-in-out 1.8s infinite;
+}
+
+.fk-biti-svg {
+    display: block;
+}
+
+.fk-biti-eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: fk-biti-blink 4s infinite;
+}
+
+.fk-biti-light {
+    animation: fk-biti-light 1.4s ease-in-out infinite;
+}
+
+.fk-biti-arm-r {
+    transform-box: fill-box;
+    transform-origin: top center;
+}
+
+.fk-biti[data-mood="excited"] .fk-biti-arm-r {
+    animation: fk-biti-wave 0.5s ease-in-out 4;
+}
+
+.fk-biti-mouth {
+    display: none;
+}
+
+.fk-biti[data-mood="happy"] .fk-biti-mouth-happy,
+.fk-biti[data-mood="sad"] .fk-biti-mouth-think,
+.fk-biti[data-mood="think"] .fk-biti-mouth-think,
+.fk-biti[data-mood="excited"] .fk-biti-mouth-excited {
+    display: inline;
+}
+
+.fk-biti[data-mood="think"] .fk-biti-light { fill: #facc15; }
+.fk-biti[data-mood="excited"] .fk-biti-light { fill: #22c55e; }
+.fk-biti[data-mood="sad"] .fk-biti-light { fill: #60a5fa; }
+
+.fk-biti-bubble {
+    position: relative;
+    display: none;
+    max-width: min(78vw, 300px);
+    margin-bottom: 10px;
+    margin-right: 30px;
+    padding: 0.9rem 2.2rem 0.9rem 1rem;
+    border-radius: 1.2rem 1.2rem 0.3rem 1.2rem;
+    background: #fff;
+    border: 3px solid #38bdf8;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.35;
+    color: var(--fk-ink);
+}
+
+.fk-biti-bubble.is-visible {
+    display: block;
+    animation: fk-bubble-in 0.25s ease-out both;
+}
+
+.fk-biti-bubble::after {
+    content: '';
+    position: absolute;
+    right: 18px;
+    bottom: -14px;
+    border-width: 14px 0 0 14px;
+    border-style: solid;
+    border-color: #38bdf8 transparent transparent transparent;
+}
+
+.fk-biti-close {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.fk-biti-close:hover {
+    background: #f1f5f9;
+}
+
+.fk-biti-toggle {
+    position: absolute;
+    right: -4px;
+    bottom: 4px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #38bdf8;
+    font-weight: 800;
+    line-height: 1;
+    color: #0284c7;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+}
+
+.fk-biti.is-collapsed .fk-biti-bot {
+    transform: scale(0.45);
+    transform-origin: bottom right;
+    animation: none;
+}
+
+.fk-biti.is-collapsed .fk-biti-bubble {
+    display: none;
+}
+
+@media (max-width: 520px) {
+    .fk-biti-svg {
+        width: 72px;
+        height: 84px;
+    }
+
+    .fk-biti-bubble {
+        font-size: 0.92rem;
+    }
+}
+
+/* --- Ünneplés: szintlépés és kitűzők --- */
+@keyframes fk-confetti-fall {
+    0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0.8; }
+}
+
+@keyframes fk-celebrate-in {
+    0%   { opacity: 0; transform: scale(0.4) rotate(-8deg); }
+    60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes fk-rays {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fk-title-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+}
+
+.fk-celebrate {
+    position: fixed;
+    inset: 0;
+    z-index: 180;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: radial-gradient(circle at 50% 45%, rgba(30, 27, 75, 0.55), rgba(15, 23, 42, 0.8));
+    cursor: pointer;
+    animation: fk-pop-in 0.2s ease-out both;
+    transition: opacity 0.35s;
+}
+
+.fk-celebrate.is-leaving {
+    opacity: 0;
+}
+
+.fk-confetti {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.fk-confetti i {
+    position: absolute;
+    top: -5vh;
+    border-radius: 2px;
+    animation-name: fk-confetti-fall;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+}
+
+.fk-celebrate-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: min(92vw, 26rem);
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: 2rem;
+    background: linear-gradient(180deg, #fff, #fef9c3);
+    border: 4px solid #facc15;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 8px rgba(250, 204, 21, 0.3);
+    text-align: center;
+    overflow: hidden;
+    animation: fk-celebrate-in 0.6s cubic-bezier(.2, .9, .3, 1.3) both;
+}
+
+.fk-celebrate-rays {
+    position: absolute;
+    left: 50%;
+    top: 3.5rem;
+    width: 26rem;
+    height: 26rem;
+    margin: -13rem 0 0 -13rem;
+    background: repeating-conic-gradient(rgba(250, 204, 21, 0.28) 0 10deg, transparent 10deg 20deg);
+    border-radius: 50%;
+    animation: fk-rays 12s linear infinite;
+    pointer-events: none;
+}
+
+.fk-celebrate-emoji {
+    position: relative;
+    font-size: 4.5rem;
+    line-height: 1;
+    animation: fk-bounce 1s ease-in-out infinite;
+}
+
+.fk-celebrate-title {
+    position: relative;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(90deg, #f43f5e, #f59e0b, #22c55e, #3b82f6, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: fk-title-pulse 1.2s ease-in-out infinite;
+}
+
+.fk-celebrate-sub {
+    position: relative;
+    font-weight: 800;
+    color: #475569;
+}
+
+.fk-celebrate-stars {
+    position: relative;
+}
+
+.fk-celebrate-stars .fk-stars {
+    font-size: 2rem;
+}
+
+.fk-celebrate-bonus {
+    position: relative;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.fk-celebrate-bonus > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid #fde047;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #713f12;
+}
+
+.fk-celebrate-hint {
+    position: relative;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.fk-toast-achievement {
+    border-left-color: #f59e0b;
+    background: linear-gradient(90deg, #fffbeb, #fff);
+}
+
+/* --- Közös megerősítő ablak --- */
+.fk-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.5);
+}
+
+/* --- Értesítési zónák és gomb-alapok (a Tailwind betöltése nélkül is rendben legyenek) --- */
+#fk-toast-zone {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(92vw, 20rem);
+}
+
+#fk-taskbar-pinned,
+#fk-taskbar-windows {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.fk-biti-bot,
+.fk-wbtn,
+.fk-desktop-icon,
+.fk-taskbar-btn,
+.fk-start-app,
+.fk-tab,
+.fk-progress-card {
+    border-width: 0;
+    background-color: transparent;
+}
+
+.fk-progress-card {
+    background-color: #fff;
+    border: 2px solid #e2e8f0;
+    border-left: 6px solid var(--game-color, #3b82f6);
+}
+
+/* Biztosítjuk, hogy a .hidden mindenhol érvényesüljön (a fenti display szabályok után is) */
+.hidden {
+    display: none !important;
+}

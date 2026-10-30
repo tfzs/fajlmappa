@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
+    <title>Fájl-Kaland</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Baloo 2"', 'Nunito', 'system-ui', 'sans-serif'],
+                        body: ['Nunito', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-body antialiased">
+
+<!-- =====================================================================
+     BETÖLTŐ KÉPERNYŐ
+     ===================================================================== -->
+<div id="screen-loading" class="fk-screen fixed inset-0 flex flex-col items-center justify-center fk-auth-bg">
+    <div class="text-7xl fk-bounce" aria-hidden="true">📁</div>
+    <p class="mt-4 font-display text-2xl font-bold text-white drop-shadow">Fájl-Kaland betöltése…</p>
+</div>
+
+<!-- =====================================================================
+     BEJELENTKEZÉS / REGISZTRÁCIÓ
+     ===================================================================== -->
+<div id="screen-auth" class="fk-screen hidden fixed inset-0 overflow-y-auto fk-auth-bg">
+    <!-- Lebegő díszítő ikonok -->
+    <div class="fk-floaters" aria-hidden="true">
+        <span style="left:6%;top:12%;animation-delay:0s">📁</span>
+        <span style="left:84%;top:8%;animation-delay:1.2s">📄</span>
+        <span style="left:12%;top:72%;animation-delay:2.1s">🖼️</span>
+        <span style="left:78%;top:66%;animation-delay:.6s">🎵</span>
+        <span style="left:46%;top:4%;animation-delay:1.8s">💾</span>
+        <span style="left:90%;top:38%;animation-delay:2.6s">🗂️</span>
+        <span style="left:3%;top:42%;animation-delay:3.1s">🗑️</span>
+        <span style="left:56%;top:86%;animation-delay:.9s">⭐</span>
+    </div>
+
+    <div class="relative z-10 min-h-full flex flex-col items-center justify-center px-4 py-8">
+        <header class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-white/90 shadow-xl text-6xl fk-wiggle" aria-hidden="true">📂</div>
+            <h1 class="mt-4 font-display text-5xl sm:text-6xl font-extrabold text-white fk-title-shadow">Fájl-Kaland</h1>
+            <p class="mt-1 text-lg sm:text-xl font-bold text-white/95">Tanulj fájlokat és mappákat kezelni játszva!</p>
+        </header>
+
+        <main class="w-full max-w-md bg-white rounded-[2rem] shadow-2xl p-5 sm:p-7 fk-pop-in">
+            <!-- Fülek -->
+            <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl mb-5" role="tablist">
+                <button type="button" id="tab-login" class="fk-auth-tab is-active" role="tab" aria-selected="true" data-tab="login">🔑 Belépés</button>
+                <button type="button" id="tab-register" class="fk-auth-tab" role="tab" aria-selected="false" data-tab="register">✨ Regisztráció</button>
+            </div>
+
+            <div id="auth-message" class="hidden mb-4 rounded-2xl px-4 py-3 font-bold text-sm" role="alert"></div>
+
+            <!-- Belépés űrlap -->
+            <form id="form-login" class="space-y-4" autocomplete="on" novalidate>
+                <div>
+                    <label for="login-username" class="fk-label">👤 Felhasználónév</label>
+                    <input id="login-username" name="username" type="text" class="fk-input" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+                </div>
+                <div>
+                    <label for="login-password" class="fk-label">🔒 Jelszó</label>
+                    <div class="relative">
+                        <input id="login-password" name="password" type="password" class="fk-input pr-14" autocomplete="current-password" required>
+                        <button type="button" class="fk-eye" data-toggle-password="login-password" aria-label="Jelszó megjelenítése">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="fk-btn fk-btn-primary w-full text-xl">Indulhat a kaland! 🚀</button>
+                <p class="text-center text-sm text-slate-500 font-semibold">Még nincs fiókod? <button type="button" class="text-blue-600 underline font-bold" data-tab="register">Regisztrálj!</button></p>
+            </form>
+
+            <!-- Regisztráció űrlap -->
+            <form id="form-register" class="space-y-4 hidden" autocomplete="off" novalidate>
+                <div>
+                    <label for="reg-name" class="fk-label">🧒 Teljes neved</label>
+                    <input id="reg-name" name="name" type="text" class="fk-input" placeholder="pl. Kiss Anna" maxlength="60" required>
+                </div>
+                <div>
+                    <label for="reg-class" class="fk-label">🏫 Osztályod</label>
+                    <select id="reg-class" name="class_id" class="fk-input" required>
+                        <option value="">Válaszd ki az osztályodat…</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="reg-username" class="fk-label">👤 Felhasználónév</label>
+                    <input id="reg-username" name="username" type="text" class="fk-input" placeholder="pl. kissanna" maxlength="30" autocapitalize="none" spellcheck="false" required>
+                    <p class="fk-hint">Szóköz nélkül, legalább 3 betű.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="reg-password" class="fk-label">🔒 Jelszó</label>
+                        <div class="relative">
+                            <input id="reg-password" name="password" type="password" class="fk-input pr-14" autocomplete="new-password" required>
+                            <button type="button" class="fk-eye" data-toggle-password="reg-password" aria-label="Jelszó megjelenítése">👁️</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="reg-password2" class="fk-label">🔒 Még egyszer</label>
+                        <input id="reg-password2" name="password2" type="password" class="fk-input" autocomplete="new-password" required>
+                    </div>
+                </div>
+                <p class="fk-hint -mt-2">A jelszó legalább 4 karakter legyen. Jegyezd meg jól!</p>
+                <button type="submit" class="fk-btn fk-btn-success w-full text-xl">Regisztrálok! 🎉</button>
+                <p class="text-center text-sm text-slate-500 font-semibold">Már van fiókod? <button type="button" class="text-blue-600 underline font-bold" data-tab="login">Lépj be!</button></p>
+            </form>
+        </main>
+
+        <footer class="mt-6 text-white/90 text-sm font-semibold text-center">Regisztráció után a tanárod hagyja jóvá a fiókodat. 🧑‍🏫</footer>
+    </div>
+</div>
+
+<!-- =====================================================================
+     TANÁRI VEZÉRLŐPULT
+     ===================================================================== -->
+<div id="screen-teacher" class="fk-screen hidden min-h-screen bg-slate-100">
+    <header class="sticky top-0 z-30 bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-3 mr-auto">
+                <span class="text-3xl" aria-hidden="true">🧑‍🏫</span>
+                <div>
+                    <h1 class="font-display text-2xl font-bold leading-tight">Tanári vezérlőpult</h1>
+                    <p class="text-sm text-blue-100 font-semibold">Fájl-Kaland · Belépve: <span id="teacher-name">Tanár</span></p>
+                </div>
+            </div>
+            <label class="flex items-center gap-2 bg-white/15 rounded-xl px-3 py-2">
+                <span class="text-sm font-bold whitespace-nowrap">🏫 Osztály:</span>
+                <select id="teacher-class-filter" class="bg-white text-slate-800 rounded-lg px-2 py-1.5 font-bold min-w-[8rem]">
+                    <option value="0">Minden osztály</option>
+                </select>
+            </label>
+            <button type="button" id="teacher-refresh" class="fk-btn fk-btn-ghost-light">🔄 Frissítés</button>
+            <button type="button" id="teacher-logout" class="fk-btn fk-btn-danger">🚪 Kijelentkezés</button>
+        </div>
+        <nav class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto fk-no-scrollbar" role="tablist">
+            <button type="button" class="fk-teacher-tab is-active" data-panel="pending" role="tab">⏳ Jóváhagyás <span id="pending-badge" class="fk-badge hidden">0</span></button>
+            <button type="button" class="fk-teacher-tab" data-panel="progress" role="tab">📊 Előrehaladás</button>
+            <button type="button" class="fk-teacher-tab" data-panel="classes" role="tab">🏫 Osztályok</button>
+            <button type="button" class="fk-teacher-tab" data-panel="password" role="tab">🔑 Jelszó-visszaállítás</button>
+        </nav>
+    </header>
+
+    <div id="teacher-toast-zone" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-[min(92vw,22rem)]"></div>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- Jóváhagyás panel -->
+        <section id="panel-pending" class="fk-teacher-panel">
+            <div class="fk-card">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <h2 class="font-display text-2xl font-bold text-slate-800 mr-auto">Jóváhagyásra váró diákok</h2>
+                    <button type="button" id="pending-approve-selected" class="fk-btn fk-btn-success" disabled>✅ Kijelöltek jóváhagyása</button>
+                    <button type="button" id="pending-reject-selected" class="fk-btn fk-btn-outline-danger" disabled>✖ Kijelöltek elutasítása</button>
+                    <button type="button" id="pending-approve-all" class="fk-btn fk-btn-primary">✅ Mind jóváhagyása</button>
+                </div>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="fk-table">
+                        <thead>
+                            <tr>
+                                <th class="w-12"><input type="checkbox" id="pending-select-all" class="fk-check" aria-label="Összes kijelölése"></th>
+                                <th>Név</th>
+                                <th>Felhasználónév</th>
+                                <th>Osztály</th>
+                                <th>Regisztrált</th>
+                                <th class="text-right">Művelet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="pending-empty" class="hidden text-center py-10">
+                    <div class="text-6xl" aria-hidden="true">🎉</div>
+                    <p class="mt-2 font-bold text-slate-600">Nincs jóváhagyásra váró diák.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Előrehaladás panel -->
+        <section id="panel-progress" class="fk-teacher-panel hidden">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="fk-stat"><span class="fk-stat-icon">🧒</span><div><p class="fk-stat-label">Aktív diákok</p><p id="stat-students" class="fk-stat-value">0</p></div></div>
+                <div class="fk-stat"><span class="fk-stat-icon">⭐</span><div><p class="fk-stat-label">Átlag XP</p><p id="stat-avg-xp" class="fk-stat-value">0</p></div></div>
+                <div class="fk-stat"><span class="fk-stat-icon">🪙</span><div><p class="fk-stat-label">Összes Bájt-érme</p><p id="stat-coins" class="fk-stat-value">0</p></div></div>
+                <div class="fk-stat"><span class="fk-stat-icon">🎮</span><div><p class="fk-stat-label">Teljesített körök</p><p id="stat-completed" class="fk-stat-value">0</p></div></div>
+            </div>
+
+            <div class="fk-card">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <h2 class="font-display text-2xl font-bold text-slate-800 mr-auto">Diákok előrehaladási mátrixa</h2>
+                    <input type="search" id="progress-search" class="fk-input !py-2 max-w-xs" placeholder="🔎 Keresés névre…">
+                    <select id="progress-sort" class="fk-input !py-2 max-w-[12rem]">
+                        <option value="class">Rendezés: osztály, név</option>
+                        <option value="name">Rendezés: név</option>
+                        <option value="xp">Rendezés: XP (csökkenő)</option>
+                        <option value="coins">Rendezés: érme (csökkenő)</option>
+                        <option value="errors">Rendezés: hibák (csökkenő)</option>
+                    </select>
+                </div>
+                <div class="flex flex-wrap gap-3 mb-3 text-xs font-bold text-slate-600">
+                    <span class="flex items-center gap-1"><span class="fk-lvl fk-lvl-0">–</span> nem kezdte el</span>
+                    <span class="flex items-center gap-1"><span class="fk-lvl fk-lvl-1">1</span>–<span class="fk-lvl fk-lvl-5">5</span> nehézségi szint</span>
+                    <span class="flex items-center gap-1">❌ = összes hiba</span>
+                    <span class="flex items-center gap-1">✔ = teljesített körök</span>
+                </div>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="fk-table fk-matrix">
+                        <thead id="progress-thead"></thead>
+                        <tbody id="progress-tbody"></tbody>
+                        <tfoot id="progress-tfoot"></tfoot>
+                    </table>
+                </div>
+                <div id="progress-empty" class="hidden text-center py-10">
+                    <div class="text-6xl" aria-hidden="true">📭</div>
+                    <p class="mt-2 font-bold text-slate-600">Ebben az osztályban még nincs aktív diák.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Osztályok panel -->
+        <section id="panel-classes" class="fk-teacher-panel hidden">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <div class="fk-card lg:col-span-1">
+                    <h2 class="font-display text-2xl font-bold text-slate-800 mb-4">Új osztály felvétele</h2>
+                    <form id="form-add-class" class="space-y-4" novalidate>
+                        <div>
+                            <label for="new-class-name" class="fk-label">Osztály neve</label>
+                            <input id="new-class-name" type="text" class="fk-input" placeholder="pl. 5.c" maxlength="20" required>
+                        </div>
+                        <button type="submit" class="fk-btn fk-btn-success w-full">➕ Osztály hozzáadása</button>
+                    </form>
+                </div>
+                <div class="fk-card lg:col-span-2">
+                    <h2 class="font-display text-2xl font-bold text-slate-800 mb-4">Osztályok</h2>
+                    <div id="classes-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jelszó-visszaállítás panel -->
+        <section id="panel-password" class="fk-teacher-panel hidden">
+            <div class="fk-card max-w-xl">
+                <h2 class="font-display text-2xl font-bold text-slate-800 mb-1">Diák jelszavának visszaállítása</h2>
+                <p class="text-slate-500 font-semibold mb-4">Ha egy diák elfelejtette a jelszavát, itt adhatsz neki újat. (A fenti osztályszűrő itt is érvényes.)</p>
+                <form id="form-reset-password" class="space-y-4" novalidate>
+                    <div>
+                        <label for="reset-student" class="fk-label">Diák</label>
+                        <select id="reset-student" class="fk-input" required>
+                            <option value="">Válassz diákot…</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="reset-password" class="fk-label">Új jelszó</label>
+                        <div class="flex gap-2">
+                            <input id="reset-password" type="text" class="fk-input" minlength="4" maxlength="72" autocomplete="off" required>
+                            <button type="button" id="reset-generate" class="fk-btn fk-btn-ghost whitespace-nowrap">🎲 Generál</button>
+                        </div>
+                        <p class="fk-hint">Legalább 4 karakter. A „Generál” gomb könnyen megjegyezhető jelszót ad.</p>
+                    </div>
+                    <button type="submit" class="fk-btn fk-btn-primary w-full">🔑 Jelszó beállítása</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- =====================================================================
+     DIÁK FELÜLET – Windows 11 jellegű asztal (a core.js tölti fel)
+     ===================================================================== -->
+<div id="screen-student" class="fk-screen hidden fixed inset-0 overflow-hidden select-none">
+    <!-- Asztal háttér (a felszerelt háttér osztálya ide kerül: fk-bg-<azonosító>) -->
+    <div id="fk-desktop" class="fk-desktop fk-bg-default">
+
+        <!-- Asztali ikonok: 6 játékmód + Bájt-Bolt + Profilom és Kitűzők (core.js rajzolja ki) -->
+        <div id="fk-desktop-icons" class="fk-desktop-icons" aria-label="Asztal ikonjai"></div>
+
+        <!-- Üdvözlő kártya – az első ablak megnyitásakor eltűnik -->
+        <div id="fk-welcome" class="fk-welcome">
+            <div class="text-5xl" aria-hidden="true">👋</div>
+            <h2 class="font-display text-3xl font-extrabold text-slate-800">Szia, <span id="fk-welcome-name">Kalandor</span>!</h2>
+            <p class="font-bold text-slate-600">Kattints duplán (tableten koppints egyet) egy ikonra az asztalon a kezdéshez!</p>
+        </div>
+
+        <!-- Ablakréteg: ide nyílnak a programablakok -->
+        <div id="fk-window-layer" class="fk-window-layer"></div>
+
+        <!-- Helyőrző konténerek a modulokhoz -->
+        <div id="fk-core-root" class="fk-module-root" data-module="core.js"></div>
+        <div id="fk-explorer-root" class="fk-module-root" data-module="explorer.js"></div>
+        <div id="fk-games1-root" class="fk-module-root" data-module="games_1.js"></div>
+        <div id="fk-games2-root" class="fk-module-root" data-module="games_2.js"></div>
+
+        <!-- Jobb gombos (helyi) menü helye -->
+        <div id="fk-context-menu" class="fk-context-menu hidden" role="menu"></div>
+    </div>
+
+    <!-- Biti, a kiber-robot (core.js rajzolja ki) -->
+    <div id="fk-biti-root"></div>
+
+    <!-- Start menü -->
+    <div id="fk-start-menu" class="fk-start-menu hidden" role="menu" aria-label="Start menü">
+        <div class="flex items-center gap-3 p-4 border-b border-white/40">
+            <div id="fk-start-avatar" class="fk-avatar">?</div>
+            <div class="min-w-0">
+                <p id="fk-start-name" class="font-display font-bold text-lg text-slate-800 truncate">Diák</p>
+                <p id="fk-start-class" class="text-sm font-bold text-slate-500">–</p>
+            </div>
+        </div>
+        <p class="px-4 pt-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">Programok</p>
+        <div id="fk-start-apps" class="fk-start-apps"></div>
+        <div class="flex justify-end p-3 border-t border-white/40">
+            <button type="button" class="fk-btn fk-btn-danger !py-2" data-action="logout">⏻ Kijelentkezés</button>
+        </div>
+    </div>
+
+    <!-- Tálca -->
+    <footer id="fk-taskbar" class="fk-taskbar">
+        <div class="fk-taskbar-left">
+            <button type="button" id="fk-taskbar-user" class="fk-taskbar-user" title="Profilom és Kitűzők">
+                <span id="fk-taskbar-avatar" class="fk-avatar fk-avatar-sm">?</span>
+                <span class="min-w-0 hidden sm:block text-left">
+                    <span id="fk-taskbar-name" class="block font-bold text-sm text-slate-800 truncate max-w-[10rem]">Diák</span>
+                    <span id="fk-taskbar-class" class="block text-xs font-bold text-slate-500 leading-none">–</span>
+                </span>
+            </button>
+        </div>
+
+        <div class="fk-taskbar-center">
+            <button type="button" id="fk-start-button" class="fk-taskbar-btn fk-start-btn" aria-label="Start menü" aria-expanded="false">
+                <span class="fk-win-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            </button>
+            <!-- Rögzített programok (core.js) -->
+            <div id="fk-taskbar-pinned" class="flex items-center gap-1"></div>
+            <!-- A megnyitott ablakok gombjai (core.js) -->
+            <div id="fk-taskbar-windows" class="flex items-center gap-1"></div>
+        </div>
+
+        <div class="fk-taskbar-right">
+            <div class="fk-pill" title="Tapasztalati pont (XP)">
+                <span aria-hidden="true">⭐</span>
+                <span class="hidden md:inline text-xs text-slate-500">Szint</span>
+                <span id="fk-level" class="font-extrabold">1</span>
+                <span class="fk-xpbar" aria-hidden="true"><span id="fk-xpbar-fill"></span></span>
+                <span id="fk-xp" class="font-bold text-xs text-slate-600">0 XP</span>
+            </div>
+            <button type="button" id="fk-coins-pill" class="fk-pill fk-pill-coin" title="Bájt-érmék – kattints a Bájt-Bolthoz!">
+                <span class="fk-coin" aria-hidden="true">B</span>
+                <span id="fk-coins" class="font-extrabold">50</span>
+            </button>
+            <div class="fk-clock hidden md:flex" aria-hidden="true">
+                <span id="fk-clock-time">00:00</span>
+                <span id="fk-clock-date">2026.01.01.</span>
+            </div>
+            <button type="button" class="fk-taskbar-btn fk-logout-btn" data-action="logout" title="Kijelentkezés" aria-label="Kijelentkezés">⏻</button>
+        </div>
+    </footer>
+
+    <!-- Értesítések (toast) a diák felületen: jobb felső sarok, hogy Bitit ne takarják -->
+    <div id="fk-toast-zone" class="fixed right-3 top-3 z-[150] flex flex-col gap-2 w-[min(92vw,20rem)]"></div>
+</div>
+
+<!-- Ünneplő animációk (szintlépés, kitűzők) -->
+<div id="fk-celebration-root"></div>
+
+<!-- Közös megerősítő ablak (tanári és diák felület) -->
+<div id="confirm-modal" class="fk-modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-sm fk-pop-in">
+        <h3 id="confirm-title" class="font-display text-xl font-bold text-slate-800">Biztos vagy benne?</h3>
+        <p id="confirm-text" class="mt-2 text-slate-600 font-semibold"></p>
+        <div class="mt-5 flex justify-end gap-2">
+            <button type="button" id="confirm-cancel" class="fk-btn fk-btn-ghost">Mégse</button>
+            <button type="button" id="confirm-ok" class="fk-btn fk-btn-danger">Igen</button>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================================
+     ALKALMAZÁSLOGIKA
+     core.js: bejelentkezés, tanári pult, asztal, ablakkezelő, AdaptiveEngine, Biti, Bájt-Bolt
+     A többi modul a következő lépésekben készül el (amíg nincs meg, a böngésző
+     csak egy 404-et jelez a konzolban, az oldal működik).
+     ===================================================================== -->
+<script src="core.js" defer></script>
+<script src="explorer.js" defer></script>
+<script src="games_1.js" defer></script>
+<script src="games_2.js" defer></script>
+</body>
+</html>
