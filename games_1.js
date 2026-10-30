@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fájl-Kaland – games_1.js
+   Fájl-Kaland – games_1.js  (verzió: 0.6 beta)
    Az első három játékmodul:
      1. Kiterjesztés-párosító   (Micsoda ez a fájl?)
      2. Útvonal-labirintus      (Navigáció és fastruktúra – explorer.js-sel)

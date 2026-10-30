@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Fájl-Kaland – explorer.js
+   Fájl-Kaland – explorer.js  (verzió: 0.6 beta)
    Szimulált Windows 11 Fájlkezelő és virtuális fájlrendszer (VFS) motor.
 
    HASZNÁLAT A JÁTÉKOKBÓL (games_1.js, games_2.js)

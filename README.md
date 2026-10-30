@@ -1,5 +1,7 @@
 # Fájl-Kaland 🗂️
 
+**Verzió: 0.6 beta** (2026. október 30.). Ez tesztverzió: kipróbálásra és visszajelzésre készült.
+
 Játékos webalkalmazás 10–11 éves diákoknak a Windows fájl- és mappakezelés gyakorlására.
 Hat játék, beépített Windows 11-szerű Fájlkezelő, alkalmazkodó nehézség (1–5. szint),
 Biti, a segítő robot, Bájt-Bolt, kitűzők és tanári felület.
@@ -57,6 +59,10 @@ A szkriptek betöltési sorrendje fontos (az `index.html` már így tölti be):
    XP-t és a Bájt-érméket a szerver menti, az érmékből a Bájt-Boltban háttereket és mappastílusokat
    vehetnek. Te a tanári felület statisztikájában osztályonként látod, ki melyik játékban hányas
    szinten jár, és hány hibát ejtett. Az oldal PC-n és tableten is működik.
+
+## Frissítés újabb verzióra
+
+Írd felül a régi fájlokat az újakkal, de az `adatbazis.sqlite` fájlt **ne töröld**, mert abban vannak a diákok és az eredményeik. Az `index.html` a szkripteket verziószámmal (`?v=0.6b`) tölti be, így frissítés után a böngészők az új fájlokat töltik le.
 
 ## Gyors kipróbálás saját gépen
 
